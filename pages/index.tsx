@@ -1,5 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
+import Pagination from "@/components/pagination";
+import {useRouter} from "next/router";
+import {useEffect} from "react";
 
 export default function Home({mealsByCategory}:{mealsByCategory:{
         categor:string,
@@ -10,7 +13,30 @@ export default function Home({mealsByCategory}:{mealsByCategory:{
         }[]
     }[]}) {
 
+
+
+    const router = useRouter();
+    let currentPage = Number(router.query.page) || 1;
+
+
     const allMeals= mealsByCategory.map(caterory=>caterory.meals).flat(1)
+
+    const itemsPerPage = 12
+    const totalMeals = allMeals.length
+
+
+    const totalPages = Math.ceil(totalMeals / itemsPerPage);
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const currentDishes = allMeals.slice(startIndex, startIndex + itemsPerPage);
+
+
+
+    useEffect(()=>{
+        const url = router.asPath;
+        const page = url.split("page=")[1];
+        currentPage = Number(page)
+
+    },[currentPage,router])
 
 
     return (
@@ -21,9 +47,10 @@ export default function Home({mealsByCategory}:{mealsByCategory:{
         <div className={'list grid grid-cols-6 gap-5'}>
             {
 
-                allMeals.map(meal=>(
-                         <div key={meal.idMeal}
-                              className={'p-5 border border-gray-200 rounded-xl border border-gray-200 shadow-xl'}
+                currentDishes.map(meal=>(
+                         <div
+                             key={meal.idMeal}
+                             className={'p-5 border border-gray-200 rounded-xl border border-gray-200 shadow-xl'}
                          >
                              <Link href={`/meal/${meal.idMeal}`} className={'flex items-center justify-center'}>
 
@@ -45,6 +72,12 @@ export default function Home({mealsByCategory}:{mealsByCategory:{
                 ))
 
             }
+
+            <div className={'container mx-auto'}>
+                <Pagination totalPages={totalPages} currentPage={currentPage}/>
+            </div>
+
+
         </div>
     </div>
     )
