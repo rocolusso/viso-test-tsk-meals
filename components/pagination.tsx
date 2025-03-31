@@ -1,6 +1,4 @@
 import { useRouter } from "next/router";
-import {memo} from "react";
-
 
 type PaginationProps = {
     totalPages: number;
@@ -59,4 +57,4 @@ const  Pagination = ({ totalPages, currentPage }: PaginationProps)=> {
         </div>
     );
 }
-export default memo(Pagination);
+export default Pagination;
