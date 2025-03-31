@@ -1,3 +1,6 @@
+import Link from "next/link";
+import Image from "next/image";
+
 export default function Home({mealsByCategory}:{mealsByCategory:{
         categor:string,
         meals:{
@@ -7,14 +10,45 @@ export default function Home({mealsByCategory}:{mealsByCategory:{
         }[]
     }[]}) {
 
-
+    const allMeals= mealsByCategory.map(caterory=>caterory.meals).flat(1)
 
 
     return (
-    <div>
-      start
+    <div className="container mx-auto">
+      <div>
+          <p className={'uppercase text-xl'}>Meals</p>
+      </div>
+        <div className={'list grid grid-cols-6 gap-5'}>
+            {
+
+                allMeals.map(meal=>(
+                         <div key={meal.idMeal}
+                              className={'p-5 border border-gray-200 rounded-xl border border-gray-200 shadow-xl'}
+                         >
+                             <Link href={`/meal/${meal.idMeal}`} className={'flex items-center justify-center'}>
+
+                                 <div>
+                                     <Image
+                                         src={meal.strMealThumb}
+                                         alt=""
+                                         width={100}
+                                         height={100}
+                                     />
+                                 </div>
+                                 <div>
+                                     <p className={'max-w-[100px]'}>{meal.strMeal.slice(0, 18)}</p>
+                                 </div>
+
+                             </Link>
+
+                         </div>
+                ))
+
+            }
+        </div>
     </div>
-  );
+    )
+        ;
 }
 
 export async function getStaticProps() {
