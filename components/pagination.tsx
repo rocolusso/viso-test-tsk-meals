@@ -1,17 +1,17 @@
-import { useRouter } from "next/router";
+import {NextRouter, useRouter} from "next/router";
 
 type PaginationProps = {
     totalPages: number;
     currentPage: number;
 };
 
+const changePage = (page: number,rout:NextRouter,count:number) => {
+    if (page < 1 || page > count) return;
+    rout.push(`?page=${page}`);
+};
+
 const  Pagination = ({ totalPages, currentPage }: PaginationProps)=> {
     const router = useRouter();
-
-    const changePage = (page: number) => {
-        if (page < 1 || page > totalPages) return;
-        router.push(`?page=${page}`);
-    };
 
     const renderPageNumbers = () => {
         if (totalPages <= 10) {
@@ -25,7 +25,7 @@ const  Pagination = ({ totalPages, currentPage }: PaginationProps)=> {
         <div className={''}>
             <div className="flex items-center space-x-2 mt-4">
                 <button
-                    onClick={() => changePage(currentPage - 1)}
+                    onClick={() => changePage(currentPage - 1,router,totalPages)}
                     disabled={currentPage === 1}
                     className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
                 >
@@ -35,7 +35,7 @@ const  Pagination = ({ totalPages, currentPage }: PaginationProps)=> {
                 {renderPageNumbers().map((page, index) => (
                     <button
                         key={index}
-                        onClick={() => typeof page === "number" && changePage(page)}
+                        onClick={() => typeof page === "number" && changePage(page,router,totalPages)}
                         disabled={page === "..."}
                         className={`px-3 py-1 ${
                             currentPage === page ? "bg-blue-500 text-white" : "bg-gray-200"
@@ -47,7 +47,7 @@ const  Pagination = ({ totalPages, currentPage }: PaginationProps)=> {
 
 
                 <button
-                    onClick={() => changePage(currentPage + 1)}
+                    onClick={() => changePage(currentPage + 1,router,totalPages)}
                     disabled={currentPage === totalPages}
                     className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
                 >
