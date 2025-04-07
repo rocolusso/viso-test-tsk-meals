@@ -10,17 +10,16 @@ const changePage = (page: number,rout:NextRouter,count:number) => {
     rout.push(`?page=${page}`);
 };
 
+const renderPageNumbers = (totalPages:number) => {
+    if (totalPages <= 10) {
+        return Array.from({ length: totalPages }, (_, i) => i + 1);
+    } else {
+        return [1, 2, 3, 4, 5, 6, 7, "...", totalPages];
+    }
+};
+
 const  Pagination = ({ totalPages, currentPage }: PaginationProps)=> {
     const router = useRouter();
-
-    const renderPageNumbers = () => {
-        if (totalPages <= 10) {
-            return Array.from({ length: totalPages }, (_, i) => i + 1);
-        } else {
-            return [1, 2, 3, 4, 5, 6, 7, "...", totalPages];
-        }
-    };
-
     return (
         <div className={''}>
             <div className="flex items-center space-x-2 mt-4">
@@ -32,7 +31,7 @@ const  Pagination = ({ totalPages, currentPage }: PaginationProps)=> {
                     ←
                 </button>
 
-                {renderPageNumbers().map((page, index) => (
+                {renderPageNumbers(totalPages).map((page, index) => (
                     <button
                         key={index}
                         onClick={() => typeof page === "number" && changePage(page,router,totalPages)}
